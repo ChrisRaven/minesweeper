@@ -1,0 +1,19 @@
+:root {
+  --size: 20px;
+}
+
+.field {
+  line-height: 0;
+}
+
+.square {
+  display: inline-block;
+  width: var(--size);
+  height: var(--size);
+  background-color: lightgray;
+  border: 1px solid black;
+  margin: 2px;
+  text-align: center;
+  line-height: 1;
+  cursor: default;
+}
