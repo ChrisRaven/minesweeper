@@ -6,7 +6,7 @@
   line-height: 0;
 }
 
-.square {
+.tile {
   display: inline-block;
   width: var(--size);
   height: var(--size);

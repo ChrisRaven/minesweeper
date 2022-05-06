@@ -12,6 +12,7 @@ function getField({ x, y }) {
 
 function startGame() {
   gameEnded = false
+  numberOfFlags = 0
   generatePlayfield()
   placeMines()
   calculateNeighbours()
@@ -59,25 +60,25 @@ function generatePlayfield() {
   let x = params.x
   let y = params.y
   let playfieldElement = document.getElementById('playfield')
-  const squares = []
+  const tiles = []
 
   playfield = Array(x).fill(null).map(() => Array(y))
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
       playfield[i][j] = { content: null, state: null }
-      squares.push(`<div class="square" id="${i}-${j}"> </div>`)
+      tiles.push(`<div class="tile" id="${i}-${j}"> </div>`)
     }
-    squares.push('<br />')
+    tiles.push('<br />')
   }
 
   // to remove previous event listeners
   playfieldElement.replaceWith(playfieldElement.cloneNode(true))
   playfieldElement = document.getElementById('playfield')
 
-  playfieldElement.innerHTML = squares.join('')
-  playfieldElement.addEventListener('click', handleSquareLeftClick.bind(event))
-  playfieldElement.addEventListener('contextmenu', handleSquareRightClick.bind(event))
+  playfieldElement.innerHTML = tiles.join('')
+  playfieldElement.addEventListener('click', handleLeftClickOnTile.bind(event))
+  playfieldElement.addEventListener('contextmenu', handleRightClickOnTile.bind(event))
 }
 
 
@@ -159,11 +160,11 @@ function calculateNeighbours() {
 }
 
 
-function handleSquareLeftClick(event) {
+function handleLeftClickOnTile(event) {
   if (gameEnded) return
 
   const clicked = event.target
-  if (clicked.classList.contains('square')) {
+  if (clicked.classList.contains('tile')) {
     const coords = {};
 
     [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
@@ -172,9 +173,9 @@ function handleSquareLeftClick(event) {
       case 'mine':
         return endGame(coords)
       case 0:
-        return uncoverPartOfTheField(coords)
+        return uncoverNeighbours(coords)
       default:
-        return uncoverSquare(coords)
+        return uncoverTile(coords)
     }
   }
 }
@@ -194,13 +195,13 @@ function checkIfWon() {
   return correctlyMarkedMines === params.mines
 }
 
-function handleSquareRightClick(event) {
+function handleRightClickOnTile(event) {
   event.preventDefault()
 
   if (gameEnded) return
 
   const clicked = event.target
-  if (clicked.classList.contains('square')) {
+  if (clicked.classList.contains('tile')) {
     const coords = {};
 
     [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
@@ -226,13 +227,13 @@ function handleSquareRightClick(event) {
 }
 
 
-function uncoverSquare({ x, y }) {
+function uncoverTile({ x, y }) {
   document.getElementById(x + '-' + y).textContent = playfield[x][y].content
   playfield[x][y].state = 'visible'
 }
 
-function uncoverPartOfTheField({ x, y }) {
-  uncoverSquare({ x, y })
+function uncoverNeighbours({ x, y }) {
+  uncoverTile({ x, y })
   let neighbours = getNeighboursCoords(x, y, true)
   for (let neighbour of Object.values(neighbours)) {
     if (neighbour === null) continue
@@ -240,17 +241,17 @@ function uncoverPartOfTheField({ x, y }) {
     let field = getField(neighbour);
     if (field.state === 'hidden') {
       if (field.content === 0) {
-        uncoverPartOfTheField(neighbour)
+        uncoverNeighbours(neighbour)
       }
       else if (field.content !== 'mine' && field.state !== 'flagged') {
-        uncoverSquare(neighbour)
+        uncoverTile(neighbour)
       }
     }
   }
 }
 
 function endGame({ x, y }) {
-  console.log('looser')
+  console.log('loser')
   showPlayfield()
   gameEnded = true
 }
@@ -276,7 +277,17 @@ function showPlayfield() {
 
 
 (() => {
-  document.getElementById('confirm-parameters')?.addEventListener('click', saveSettings)
+  document.getElementById('confirm-parameters').addEventListener('click', saveSettings)
   getSettings()
   startGame()
 })()
+
+
+// TODO: styling
+// TODO: first element should be always safe
+// TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
+// TODO: add win/lose icon
+// TODO: add restart game button
+// TODO: add status (time, number of mines, number of flags, etc.)
+// TODO: colour the numbers
+// TODO: add different background for opened cells and blank tiles instead of "0"
