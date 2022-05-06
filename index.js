@@ -1,16 +1,34 @@
 let playfield = []
 let params = { x: 10, y: 10, mines: 10 }
 
-function getField({x, y}) {
+
+// shortcut for cases, when both x and y are from the same object
+function getField({ x, y }) {
   return playfield[x][y]
 }
 
-function changePlayfieldSize() {
-  params = getParameters()
+
+function startGame() {
   generatePlayfield()
   placeMines()
   calculateNeighbours()
 }
+
+
+function getSettings() {
+  settings = JSON.parse(localStorage.getItem('settings') || '""')
+  if (settings) {
+    params = settings
+  }
+}
+
+
+function saveSettings() {
+  params = getParameters()
+  localStorage.setItem('settings', JSON.stringify(params))
+  startGame()
+}
+
 
 function getParameters() {
   let selected = document.querySelector('input[name="sizeSelector"]:checked').value
@@ -88,10 +106,10 @@ function getNeighboursCoords(x, y, adjacentOnly =  false) {
   */
 
   let result = {
-    xm1:   x > 0                        ? { x: x - 1, y: y     } : null,
-    xp1:   x < maxX - 1                 ? { x: x + 1, y: y     } : null,
-    xmy:   y > 0                        ? { x: x    , y: y - 1 } : null,
-    xpy:   y < maxY - 1                 ? { x: x    , y: y + 1 } : null
+    xm1:   x > 0        ? { x: x - 1, y: y     } : null,
+    xp1:   x < maxX - 1 ? { x: x + 1, y: y     } : null,
+    xmy:   y > 0        ? { x: x    , y: y - 1 } : null,
+    xpy:   y < maxY - 1 ? { x: x    , y: y + 1 } : null
   }
 
   if (!adjacentOnly) {
@@ -195,8 +213,7 @@ function showPlayfield() {
 
 
 (() => {
-  generatePlayfield()
-  placeMines()
-  calculateNeighbours()
-  document.getElementById('confirm-parameters')?.addEventListener('click', changePlayfieldSize)
+  document.getElementById('confirm-parameters')?.addEventListener('click', saveSettings)
+  getSettings()
+  startGame()
 })()
