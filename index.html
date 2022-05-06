@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Minesweeper</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="root">
+      <div id="settings">
+        <input type="radio" name="sizeSelector" checked value="beginner" />Beginner
+        <input type="radio" name="sizeSelector" value="advanced" />Advanced
+        <input type="radio" name="sizeSelector" value="expert" />Expert
+        <label>
+          <input type="radio" name="sizeSelector" value="custom" />
+          Custom:
+            X: <input type="text" name="x-size" value=10 />
+            Y: <input type="text" name="y-size" value=10 />
+            Mines: <input type="text" name="no-of-mines" value=10 />
+        </label>
+        <button id="confirm-parameters">OK</button>
+      </div>
+      <div id="playfield"></div>
+    </div>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

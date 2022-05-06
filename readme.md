@@ -1,1 +1,1 @@
-Attempt at Minesweeper in React
+Attempt at Minesweeper in pure JS
