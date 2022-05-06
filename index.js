@@ -1,5 +1,7 @@
 let playfield = []
 let params = { x: 10, y: 10, mines: 10 }
+let gameEnded = false
+let numberOfFlags = 0
 
 
 // shortcut for cases, when both x and y are from the same object
@@ -9,6 +11,7 @@ function getField({ x, y }) {
 
 
 function startGame() {
+  gameEnded = false
   generatePlayfield()
   placeMines()
   calculateNeighbours()
@@ -68,9 +71,13 @@ function generatePlayfield() {
     squares.push('<br />')
   }
 
-  // because of innerHTML, there's no need to remove previous event listeners
+  // to remove previous event listeners
+  playfieldElement.replaceWith(playfieldElement.cloneNode(true))
+  playfieldElement = document.getElementById('playfield')
+
   playfieldElement.innerHTML = squares.join('')
-  playfieldElement.addEventListener('click', handleSquareClick.bind(event))
+  playfieldElement.addEventListener('click', handleSquareLeftClick.bind(event))
+  playfieldElement.addEventListener('contextmenu', handleSquareRightClick.bind(event))
 }
 
 
@@ -152,7 +159,9 @@ function calculateNeighbours() {
 }
 
 
-function handleSquareClick(event) {
+function handleSquareLeftClick(event) {
+  if (gameEnded) return
+
   const clicked = event.target
   if (clicked.classList.contains('square')) {
     const coords = {};
@@ -166,6 +175,52 @@ function handleSquareClick(event) {
         return uncoverPartOfTheField(coords)
       default:
         return uncoverSquare(coords)
+    }
+  }
+}
+
+function checkIfWon() {
+  let correctlyMarkedMines = 0
+
+  for (let i = 0; i < params.x; i++) {
+    for (let j = 0; j < params.y; j++) {
+      let el = playfield[i][j]
+      if (el.state === 'flagged' && el.content === 'mine') {
+        correctlyMarkedMines++
+      }
+    }
+  }
+
+  return correctlyMarkedMines === params.mines
+}
+
+function handleSquareRightClick(event) {
+  event.preventDefault()
+
+  if (gameEnded) return
+
+  const clicked = event.target
+  if (clicked.classList.contains('square')) {
+    const coords = {};
+
+    [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
+
+    let field = getField(coords)
+    if (field.state === 'hidden') {
+      clicked.innerHTML = '&#x1F6A9;'
+      field.state = 'flagged'
+      numberOfFlags++
+    }
+    else if (field.state === 'flagged') {
+      clicked.innerHTML = ''
+      field.state = 'hidden'
+      numberOfFlags--
+    }
+
+    if (numberOfFlags === params.mines) {
+      if (checkIfWon()) {
+        win()
+      }
     }
   }
 }
@@ -187,7 +242,7 @@ function uncoverPartOfTheField({ x, y }) {
       if (field.content === 0) {
         uncoverPartOfTheField(neighbour)
       }
-      else if (field.content !== 'mine') {
+      else if (field.content !== 'mine' && field.state !== 'flagged') {
         uncoverSquare(neighbour)
       }
     }
@@ -195,7 +250,15 @@ function uncoverPartOfTheField({ x, y }) {
 }
 
 function endGame({ x, y }) {
+  console.log('looser')
   showPlayfield()
+  gameEnded = true
+}
+
+function win() {
+  console.log('winner')
+  showPlayfield()
+  gameEnded = true
 }
 
 
@@ -205,7 +268,7 @@ function showPlayfield() {
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
-      let text = playfield[i][j].content === 'mine' ? 'M' : playfield[i][j].content
+      let text = playfield[i][j].content === 'mine' ? '\u{1F4A3}' : playfield[i][j].content
       document.getElementById(i + '-' + j).textContent = text
     }
   }
