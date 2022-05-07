@@ -17,3 +17,13 @@
   vertical-align: bottom;
   cursor: default;
 }
+
+.one   { color: #0000FF; }
+.two   { color: #007F00; }
+.three { color: #FF0000; }
+.four  { color: #00007F; }
+.five  { color: #7F0000; }
+.six   { color: #007F7F; }
+.seven { color: #000000; }
+.eight { color: #7F7F7F; }
+

@@ -1,7 +1,7 @@
 let playfield = []
 let params = { x: 10, y: 10, mines: 10 }
 let gameEnded = false
-let numberOfFlags = 0
+let numberOfFlagsPlaced = 0
 
 
 // shortcut for cases, when both x and y are from the same object
@@ -10,9 +10,18 @@ function getField({ x, y }) {
 }
 
 
+function updateNumberOfFlags(direction) {
+  if (direction) {
+    numberOfFlagsPlaced = direction === 'add' ? numberOfFlagsPlaced +1 : numberOfFlagsPlaced - 1
+  }
+  document.getElementById('number-of-flags').textContent = params.mines - numberOfFlagsPlaced
+}
+
+
 function startGame() {
   gameEnded = false
-  numberOfFlags = 0
+  numberOfFlagsPlaced = 0
+  updateNumberOfFlags()
   generatePlayfield()
   placeMines()
   calculateNeighbours()
@@ -183,8 +192,14 @@ function handleLeftClickOnTile(event) {
     const coords = {};
 
     [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
+    let field = getField(coords)
 
-    switch (getField(coords).content) {
+    if (field.state === 'flagged') {
+      field.state = 'visible'
+      updateNumberOfFlags('subtract')
+    }
+
+    switch (field.content) {
       case 'mine':
         return loseGame(coords)
       case 0:
@@ -225,15 +240,15 @@ function handleRightClickOnTile(event) {
     if (field.state === 'hidden') {
       clicked.innerHTML = '&#x1F6A9;'
       field.state = 'flagged'
-      numberOfFlags++
+      updateNumberOfFlags('add')
     }
     else if (field.state === 'flagged') {
       clicked.innerHTML = ''
       field.state = 'hidden'
-      numberOfFlags--
+      updateNumberOfFlags('subtract')
     }
 
-    if (numberOfFlags === params.mines) {
+    if (numberOfFlagsPlaced === params.mines) {
       if (checkIfWon()) {
         winGame()
       }
@@ -321,3 +336,4 @@ function handleRestartButton() {
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
 // TODO: add status (time, number of mines, number of flags, etc.)
 // TODO: add different background for opened cells and blank tiles instead of "0"
+// TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
