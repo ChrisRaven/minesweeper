@@ -275,10 +275,21 @@ function showPlayfield() {
   }
 }
 
+function handleRestartButton() {
+  if (!gameEnded) {
+    if (confirm('Do you want to restart the unfinishe game?')) {
+      startGame()
+    }
+  }
+  else {
+    startGame()
+  }
+}
+
 
 (() => {
   document.getElementById('confirm-parameters').addEventListener('click', saveSettings)
-  document.getElementById('restart-button').addEventListener('click', startGame)
+  document.getElementById('restart-button').addEventListener('click', handleRestartButton)
   getSettings()
   startGame()
 })()
@@ -288,7 +299,6 @@ function showPlayfield() {
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
 // TODO: add win/lose icon
-// TODO: add warning before restarting unfinished game button
 // TODO: add status (time, number of mines, number of flags, etc.)
 // TODO: colour the numbers
 // TODO: add different background for opened cells and blank tiles instead of "0"
