@@ -1,10 +1,14 @@
+import Time from './Time.js'
+
+
 let playfield = []
 let params = { x: 10, y: 10, mines: 10 }
 let gameEnded = false
 let numberOfFlagsPlaced = 0
-let timerStarted = false
-let startTime = 0
-let timer = null
+
+
+let time = new Time()
+
 
 const DIRECTION = {
   ADD: 0,
@@ -31,37 +35,6 @@ function getField({ x, y }) {
   return playfield[x][y]
 }
 
-function convertTimeToMinutesAndSeconds(time) {
-  let minutes = Math.floor(time / 60)
-  if (minutes < 10) {
-    minutes = '0' + minutes
-  }
-  let seconds = Math.floor(time % 60)
-  if (seconds < 10) {
-    seconds = '0' + seconds
-  }
-
-  return { minutes, seconds }
-}
-
-function startTimer() {
-  timerStarted = true
-  startTime = Date.now()
-  let timeDisplay = document.getElementById('time')
-  timer = setInterval(() => {
-    let currentTime = (Date.now() - startTime) / 1000
-    currentTime = convertTimeToMinutesAndSeconds(currentTime)
-    timeDisplay.textContent = currentTime.minutes + ':' + currentTime.seconds
-  }, 100)
-}
-
-
-function stopTimer() {
-  timerStarted = false
-  clearInterval(timer)
-}
-
-
 
 function updateNumberOfFlags(direction) {
   if (direction) {
@@ -74,8 +47,7 @@ function updateNumberOfFlags(direction) {
 function startGame() {
   gameEnded = false
   numberOfFlagsPlaced = 0
-  timerStarted = false
-  document.getElementById('time').textContent = '00:00'
+  time.resetTimer()
   updateNumberOfFlags()
   generatePlayfield()
   placeMines()
@@ -245,9 +217,7 @@ function getColorClass(content) {
 function handleLeftClickOnTile(event) {
   if (gameEnded) return
 
-  if (!timerStarted) {
-    startTimer()
-  }
+  time.startTimer()
 
   const clicked = event.target
   if (clicked.classList.contains('tile')) {
@@ -288,10 +258,7 @@ function checkIfWon() {
 
 function handleRightClickOnTile(event) {
   event.preventDefault()
-
-  if (!timerStarted) {
-    startTimer()
-  }
+  time.startTimer()
 
   if (gameEnded) return
 
@@ -358,7 +325,7 @@ function loseGame({ x, y }) {
   document.getElementById('result-icon').textContent = ICON.LOST_FACE;
   document.getElementById(x + '-' + y).classList.add('exploded-tile')
   showPlayfield()
-  stopTimer()
+  time.stopTimer()
   gameEnded = true
 }
 
@@ -366,7 +333,7 @@ function winGame() {
   document.getElementById('result-icon').textContent = ICON.WON_FACE;
   console.log('winner')
   showPlayfield()
-  stopTimer()
+  time.stopTimer()
   gameEnded = true
 }
 
@@ -424,4 +391,5 @@ function handleRestartButton() {
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
 // TODO: add win condition, when last field is opened manually
 // TODO: uncover all 8 neighbours of an empty field, while checking only 4 adjacent ones
-// TODO: mark exploded mine with red background
+// TODO: refactor
+// TODO: when there was a flag an user left-clicked the field and there was a bomb, change the emoji to bomb
