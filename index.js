@@ -17,6 +17,15 @@ const STATE = {
   FLAGGED: 2
 }
 
+
+const ICON = {
+  WON_FACE: '\u{1F600}',
+  LOST_FACE: '\u{1F61E}',
+  FLAG: '\u{1F6A9}',
+  MINE: '\u{1F4A3}'
+}
+
+
 // shortcut for cases, when both x and y are from the same object
 function getField({ x, y }) {
   return playfield[x][y]
@@ -294,7 +303,7 @@ function handleRightClickOnTile(event) {
 
     let field = getField(coords)
     if (field.state === STATE.HIDDEN) {
-      clicked.textContent = '\u{1F6A9}'
+      clicked.textContent = ICON.FLAG
       field.state = STATE.FLAGGED
       updateNumberOfFlags(DIRECTION.ADD)
     }
@@ -346,7 +355,7 @@ function uncoverNeighbours({ x, y }) {
 
 function loseGame({ x, y }) {
   console.log('loser')
-  document.getElementById('result-icon').textContent = '\u{1F61E}';
+  document.getElementById('result-icon').textContent = ICON.LOST_FACE;
   document.getElementById(x + '-' + y).classList.add('exploded-tile')
   showPlayfield()
   stopTimer()
@@ -354,7 +363,7 @@ function loseGame({ x, y }) {
 }
 
 function winGame() {
-  document.getElementById('result-icon').textContent = '\u{1F600}';
+  document.getElementById('result-icon').textContent = ICON.WON_FACE;
   console.log('winner')
   showPlayfield()
   stopTimer()
@@ -372,13 +381,12 @@ function showPlayfield() {
       let text = tile.content
 
       if (tile.content === 'mine' && tile.state === STATE.FLAGGED) {
-        text = '\u{1F6A9}'
+        text = ICON.FLAG
       }
       if (tile.content === 'mine' && tile.state !== STATE.FLAGGED) {
-        text = '\u{1F4A3}'
+        text = ICON.MINE
       }
       else if (tile.content !== 'mine' && tile.state === STATE.FLAGGED) {
-        // text = '\u{1F4A3}' + 'x'
         text = 'F'
       }
       else if (tile.content === 0) {
