@@ -1,8 +1,9 @@
-import { settings, ICON } from './index.js'
+import { settings, DIRECTION } from './index.js'
 
-const DIRECTION = {
-  ADD: 0,
-  SUBTRACT: 1
+
+const ICON = {
+  FLAG: '\u{1F6A9}',
+  MINE: '\u{1F4A3}'
 }
 
 export const STATE = {
@@ -16,6 +17,7 @@ export default class Playfield {
     this.playfield = []
     this.DOMNode = document.getElementById('playfield')
   }
+
 
   generate() {  
     let x = settings.x
@@ -39,6 +41,7 @@ export default class Playfield {
     this.DOMNode.innerHTML = tiles.join('')
   }
 
+
   getField(arg1, arg2) {
     let x, y
 
@@ -53,6 +56,7 @@ export default class Playfield {
     return this.playfield[x][y]
   }
 
+  
   placeMines() {
     let x = settings.x
     let y = settings.y
@@ -73,6 +77,7 @@ export default class Playfield {
       mines--
     }
   }
+
 
   getNeighboursCoords(x, y, adjacentOnly =  false) {
     let maxX = settings.x
@@ -135,6 +140,25 @@ export default class Playfield {
     }
   }
 
+
+  flag(element) {
+    const coords = element.id.split('-').map(el => parseInt(el, 10))
+    let field = this.getField(coords[0], coords[1])
+
+    if (field.state === STATE.HIDDEN) {
+      element.textContent = ICON.FLAG
+      field.state = STATE.FLAGGED
+      return DIRECTION.ADD
+    }
+    
+    if (field.state === STATE.FLAGGED) {
+      element.textContent = ''
+      field.state = STATE.HIDDEN
+      return DIRECTION.SUBTRACT
+    }
+  }
+
+
   getColorClass(content) {
     switch (content) {
       case 0: return ''
@@ -183,7 +207,7 @@ export default class Playfield {
   }
 
 
-  uncover() {
+  uncoverAll() {
     let x = settings.x
     let y = settings.y
 
@@ -211,12 +235,42 @@ export default class Playfield {
   }
 
 
+  checkField(element) {
+    let coords = {};
+    [coords.x, coords.y] = element.id.split('-').map(el => parseInt(el, 10))
+    let field = this.getField(coords)
+
+    let result = null
+    if (field.state === STATE.FLAGGED) {
+      result = 'flagged'
+    }
+
+    switch (field.content) {
+      case 'mine':
+        result = 'lost'
+        break
+      case 0:
+        this.uncoverNeighbours(coords)
+        break
+      default:
+        this.uncoverTile(coords)
+        break
+    }
+
+    if (this.checkIfWon()) {
+      result = 'won'
+    }
+    
+    return result
+  }
+
+
   checkIfWon() {
     let correctlyMarkedMines = 0
 
     for (let i = 0; i < settings.x; i++) {
       for (let j = 0; j < settings.y; j++) {
-        let el = playfield[i][j]
+        let el = this.getField(i, j)
         if (el.state === STATE.FLAGGED && el.content === 'mine') {
           correctlyMarkedMines++
         }

@@ -7,18 +7,20 @@ let gameEnded = false
 let numberOfFlagsPlaced = 0
 
 
-let time = new Time()
 export let settings = new Settings()
+let time = new Time()
 let playfield = new Playfield()
 
 
-export const ICON = {
-  WON_FACE: '\u{1F600}',
-  LOST_FACE: '\u{1F61E}',
-  FLAG: '\u{1F6A9}',
-  MINE: '\u{1F4A3}'
+export const DIRECTION = {
+  ADD: 0,
+  SUBTRACT: 1
 }
 
+const ICON = {
+  WON_FACE: '\u{1F600}',
+  LOST_FACE: '\u{1F61E}'
+}
 
 function updateNumberOfFlags(direction) {
   if (direction) {
@@ -36,7 +38,7 @@ function startGame() {
   playfield.generate()
   playfield.placeMines()
   playfield.calculateNeighbours()
-  addEvents()
+  addEvents() // to reattach event after each clearing of the playfield
 }
 
 
@@ -47,22 +49,21 @@ function handleLeftClickOnTile(event) {
 
   const clicked = event.target
   if (clicked.classList.contains('tile')) {
-    const coords = {};
 
-    [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
-    let field = playfield.getField(coords)
+    let status = playfield.checkField(clicked)
 
-    if (field.state === STATE.FLAGGED) {
+    if (status === 'flagged') {
       updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
 
-    switch (field.content) {
-      case 'mine':
-        return loseGame(coords)
-      case 0:
-        return playfield.uncoverNeighbours(coords)
-      default:
-        return playfield.uncoverTile(coords)
+    if (status === 'lost') {
+      updateNumberOfFlags(DIRECTION.SUBTRACT)
+      let coords = clicked.id.split('-').map(coord => parseInt(coord, 10))
+      lostGame({x: coords[0], y: coords[1]})
+    }
+
+    if (status === 'won') {
+      wonGame()
     }
   }
 }
@@ -76,45 +77,31 @@ function handleRightClickOnTile(event) {
 
   const clicked = event.target
   if (clicked.classList.contains('tile')) {
-    const coords = {};
-
-    [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
-
-    let field = playfield.getField(coords)
-    if (field.state === STATE.HIDDEN) {
-      clicked.textContent = ICON.FLAG
-      field.state = STATE.FLAGGED
-      updateNumberOfFlags(DIRECTION.ADD)
-    }
-    else if (field.state === STATE.FLAGGED) {
-      clicked.textContent = ''
-      field.state = STATE.HIDDEN
-      updateNumberOfFlags(DIRECTION.SUBTRACT)
-    }
+    updateNumberOfFlags(playfield.flag(clicked))
 
     if (numberOfFlagsPlaced === settings.mines) {
       if (checkIfWon()) {
-        winGame()
+        wonGame()
       }
     }
   }
 }
 
 
-function loseGame({ x, y }) {
+function lostGame({ x, y }) {
   console.log('loser')
   document.getElementById('result-icon').textContent = ICON.LOST_FACE;
   document.getElementById(x + '-' + y).classList.add('exploded-tile')
-  playfield.uncover()
+  playfield.uncoverAll()
   time.stopTimer()
   gameEnded = true
 }
 
 
-function winGame() {
+function wonGame() {
   document.getElementById('result-icon').textContent = ICON.WON_FACE;
   console.log('winner')
-  playfield.uncover()
+  playfield.uncoverAll()
   time.stopTimer()
   gameEnded = true
 }
