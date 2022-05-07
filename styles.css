@@ -18,8 +18,12 @@
   cursor: default;
 }
 
-.opened {
+.opened-tile {
   background-color: #EEE;
+}
+
+.exploded-tile {
+  background-color: red;
 }
 
 .one   { color: #0000FF; }

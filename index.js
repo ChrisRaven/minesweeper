@@ -322,7 +322,7 @@ function uncoverTile({ x, y }) {
   element.textContent = value
   element.classList.add(getColorClass(value) || null)
   playfield[x][y].state = STATE.VISIBLE
-  element.classList.add('opened')
+  element.classList.add('opened-tile')
 }
 
 
@@ -347,6 +347,7 @@ function uncoverNeighbours({ x, y }) {
 function loseGame({ x, y }) {
   console.log('loser')
   document.getElementById('result-icon').textContent = '\u{1F61E}';
+  document.getElementById(x + '-' + y).classList.add('exploded-tile')
   showPlayfield()
   stopTimer()
   gameEnded = true
@@ -399,3 +400,6 @@ function handleRestartButton() {
 // TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
 // TODO: add win condition, when last field is opened manually
+// TODO: uncover all 8 neighbours of an empty field, while checking only 4 adjacent ones
+// TODO: mark exploded mine with red background
+// TODO: fix showPlayfield() to show blank tiles instead of zeroes
