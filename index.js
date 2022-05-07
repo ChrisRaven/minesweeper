@@ -248,7 +248,6 @@ function handleLeftClickOnTile(event) {
     let field = getField(coords)
 
     if (field.state === STATE.FLAGGED) {
-      field.state = STATE.VISIBLE
       updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
 
@@ -317,9 +316,13 @@ function handleRightClickOnTile(event) {
 function uncoverTile({ x, y }) {
   let element = document.getElementById(x + '-' + y)
   let value = playfield[x][y].content
+  if (value === 0) {
+    value = ''
+  }
   element.textContent = value
   element.classList.add(getColorClass(value) || null)
   playfield[x][y].state = STATE.VISIBLE
+  element.classList.add('opened')
 }
 
 
@@ -396,3 +399,4 @@ function handleRestartButton() {
 // TODO: add different background for opened cells and blank tiles instead of "0"
 // TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
+// TODO: add win condition, when last field is opened manually

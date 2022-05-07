@@ -18,6 +18,10 @@
   cursor: default;
 }
 
+.opened {
+  background-color: #EEE;
+}
+
 .one   { color: #0000FF; }
 .two   { color: #007F00; }
 .three { color: #FF0000; }
