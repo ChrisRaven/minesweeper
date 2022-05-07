@@ -112,7 +112,7 @@ function placeMines() {
     let px = Math.floor(position / y);
     let py = position % y
 
-    let field = getField({ px, py })
+    let field = getField({ x: px, y: py })
     field.state = STATE.HIDDEN
 
     if (field.content === 'mine') continue
