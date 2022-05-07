@@ -252,11 +252,13 @@ function uncoverNeighbours({ x, y }) {
 
 function loseGame({ x, y }) {
   console.log('loser')
+  document.getElementById('result-icon').textContent = '\u{1F61E}';
   showPlayfield()
   gameEnded = true
 }
 
 function winGame() {
+  document.getElementById('result-icon').textContent = '\u{1F600}';
   console.log('winner')
   showPlayfield()
   gameEnded = true
@@ -298,7 +300,6 @@ function handleRestartButton() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: add win/lose icon
 // TODO: add status (time, number of mines, number of flags, etc.)
 // TODO: colour the numbers
 // TODO: add different background for opened cells and blank tiles instead of "0"
