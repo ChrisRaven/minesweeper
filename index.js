@@ -2,6 +2,9 @@ let playfield = []
 let params = { x: 10, y: 10, mines: 10 }
 let gameEnded = false
 let numberOfFlagsPlaced = 0
+let timerStarted = false
+let startTime = 0
+let timer = null
 
 const DIRECTION = {
   ADD: 0,
@@ -19,6 +22,37 @@ function getField({ x, y }) {
   return playfield[x][y]
 }
 
+function convertTimeToMinutesAndSeconds(time) {
+  let minutes = Math.floor(time / 60)
+  if (minutes < 10) {
+    minutes = '0' + minutes
+  }
+  let seconds = Math.floor(time % 60)
+  if (seconds < 10) {
+    seconds = '0' + seconds
+  }
+
+  return { minutes, seconds }
+}
+
+function startTimer() {
+  timerStarted = true
+  startTime = Date.now()
+  let timeDisplay = document.getElementById('time')
+  timer = setInterval(() => {
+    let currentTime = (Date.now() - startTime) / 1000
+    currentTime = convertTimeToMinutesAndSeconds(currentTime)
+    timeDisplay.textContent = currentTime.minutes + ':' + currentTime.seconds
+  }, 100)
+}
+
+
+function stopTimer() {
+  timerStarted = false
+  clearInterval(timer)
+}
+
+
 
 function updateNumberOfFlags(direction) {
   if (direction) {
@@ -31,6 +65,8 @@ function updateNumberOfFlags(direction) {
 function startGame() {
   gameEnded = false
   numberOfFlagsPlaced = 0
+  timerStarted = false
+  document.getElementById('time').textContent = '00:00'
   updateNumberOfFlags()
   generatePlayfield()
   placeMines()
@@ -200,6 +236,10 @@ function getColorClass(content) {
 function handleLeftClickOnTile(event) {
   if (gameEnded) return
 
+  if (!timerStarted) {
+    startTimer()
+  }
+
   const clicked = event.target
   if (clicked.classList.contains('tile')) {
     const coords = {};
@@ -240,6 +280,10 @@ function checkIfWon() {
 
 function handleRightClickOnTile(event) {
   event.preventDefault()
+
+  if (!timerStarted) {
+    startTimer()
+  }
 
   if (gameEnded) return
 
@@ -301,6 +345,7 @@ function loseGame({ x, y }) {
   console.log('loser')
   document.getElementById('result-icon').textContent = '\u{1F61E}';
   showPlayfield()
+  stopTimer()
   gameEnded = true
 }
 
@@ -308,6 +353,7 @@ function winGame() {
   document.getElementById('result-icon').textContent = '\u{1F600}';
   console.log('winner')
   showPlayfield()
+  stopTimer()
   gameEnded = true
 }
 
@@ -347,6 +393,6 @@ function handleRestartButton() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: add status (time, number of mines, number of flags, etc.)
 // TODO: add different background for opened cells and blank tiles instead of "0"
 // TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
+// TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
