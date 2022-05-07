@@ -90,7 +90,7 @@ function handleRightClickOnTile(event) {
 
 function lostGame({ x, y }) {
   console.log('loser')
-  document.getElementById('result-icon').textContent = ICON.LOST_FACE;
+  document.getElementById('result-icon').textContent = ICON.LOST_FACE
   document.getElementById(x + '-' + y).classList.add('exploded-tile')
   playfield.uncoverAll()
   time.stopTimer()
@@ -99,7 +99,7 @@ function lostGame({ x, y }) {
 
 
 function wonGame() {
-  document.getElementById('result-icon').textContent = ICON.WON_FACE;
+  document.getElementById('result-icon').textContent = ICON.WON_FACE
   console.log('winner')
   playfield.uncoverAll()
   time.stopTimer()
@@ -126,8 +126,8 @@ function addEvents() {
 (() => {
   document.getElementById('confirm-parameters').addEventListener('click', () => { settings.saveSettings(); startGame() })
   document.getElementById('restart-button').addEventListener('click', handleRestartButton)
-  addEvents()
   settings.getSettings()
+  addEvents()
   startGame()
 })()
 
@@ -137,6 +137,3 @@ function addEvents() {
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
 // TODO: add win condition, when last field is opened manually
-// TODO: uncover all 8 neighbours of an empty field, while checking only 4 adjacent ones
-// TODO: refactor
-// TODO: when there was a flag an user left-clicked the field and there was a bomb, change the emoji to bomb

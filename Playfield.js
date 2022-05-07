@@ -65,7 +65,7 @@ export default class Playfield {
     
     while (mines) {
       let position = Math.floor(Math.random() * size)
-      let px = Math.floor(position / y);
+      let px = Math.floor(position / y)
       let py = position % y
 
       let field = this.getField(px, py)
@@ -79,7 +79,7 @@ export default class Playfield {
   }
 
 
-  getNeighboursCoords(x, y, adjacentOnly =  false) {
+  getNeighboursCoords(x, y, diagonals =  true) {
     let maxX = settings.x
     let maxY = settings.y
     
@@ -99,7 +99,7 @@ export default class Playfield {
       xpy:   y < maxY - 1 ? { x: x    , y: y + 1 } : null
     }
 
-    if (!adjacentOnly) {
+    if (diagonals) {
       result = Object.assign(result, {
         xm1my: x > 0        && y > 0        ? { x: x - 1, y: y - 1 } : null,
         xm1py: x > 0        && y < maxY - 1 ? { x: x - 1, y: y + 1 } : null,
@@ -129,7 +129,7 @@ export default class Playfield {
         for (let coords of Object.values(neighbours)) {
           if (coords === null) continue
 
-          let el = this.getField(coords);
+          let el = this.getField(coords)
           if (el.content === 'mine') {
             counter++
           }
@@ -190,11 +190,13 @@ export default class Playfield {
 
   uncoverNeighbours({ x, y }) {
     this.uncoverTile({ x, y })
-    let neighbours = this.getNeighboursCoords(x, y, true)
+    const uncoverDiagonals = this.getField(x, y).content === 0
+    let neighbours = this.getNeighboursCoords(x, y, uncoverDiagonals)
+
     for (let neighbour of Object.values(neighbours)) {
       if (neighbour === null) continue
 
-      let field = this.getField(neighbour);
+      let field = this.getField(neighbour)
       if (field.state === STATE.HIDDEN) {
         if (field.content === 0) {
           this.uncoverNeighbours(neighbour)
@@ -236,7 +238,7 @@ export default class Playfield {
 
 
   checkField(element) {
-    let coords = {};
+    let coords = {}; // don't touch the semicolon
     [coords.x, coords.y] = element.id.split('-').map(el => parseInt(el, 10))
     let field = this.getField(coords)
 
