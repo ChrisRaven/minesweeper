@@ -159,6 +159,21 @@ function calculateNeighbours() {
   }
 }
 
+function getColorClass(content) {
+  switch (content) {
+    case 0: return ''
+    case 1: return 'one'
+    case 2: return 'two'
+    case 3: return 'three'
+    case 4: return 'four'
+    case 5: return 'five'
+    case 6: return 'six'
+    case 7: return 'seven'
+    case 8: return 'eight'
+    case 'mine': return ''
+  }
+}
+
 
 function handleLeftClickOnTile(event) {
   if (gameEnded) return
@@ -228,9 +243,13 @@ function handleRightClickOnTile(event) {
 
 
 function uncoverTile({ x, y }) {
-  document.getElementById(x + '-' + y).textContent = playfield[x][y].content
+  let element = document.getElementById(x + '-' + y)
+  let value = playfield[x][y].content
+  element.textContent = value
+  element.classList.add(getColorClass(value) || null)
   playfield[x][y].state = 'visible'
 }
+
 
 function uncoverNeighbours({ x, y }) {
   uncoverTile({ x, y })
@@ -301,5 +320,4 @@ function handleRestartButton() {
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
 // TODO: add status (time, number of mines, number of flags, etc.)
-// TODO: colour the numbers
 // TODO: add different background for opened cells and blank tiles instead of "0"
