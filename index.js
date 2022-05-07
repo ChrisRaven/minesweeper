@@ -98,15 +98,15 @@ function getParameters() {
 
   switch(selected) {
     case 'beginner':
-      return { x: 8, y: 8, mines: 10 }
+      return { x: 9, y: 9, mines: 10 }
     case 'advanced':
       return { x: 16, y: 16, mines: 40 }
     case 'expert':
-      return { x: 30, y: 16, mines: 99 }
+      return { x: 16, y: 30, mines: 99 }
     case 'custom':
       return { x: get('x-size'), y: get('y-size'), mines: get('no-of-mines')}
     default:
-      return { x: 8, y: 8, mines: 10 }
+      return { x: 9, y: 9, mines: 10 }
   }
 }
 
@@ -396,7 +396,6 @@ function handleRestartButton() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: add different background for opened cells and blank tiles instead of "0"
 // TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
 // TODO: add win condition, when last field is opened manually
