@@ -171,7 +171,7 @@ function handleLeftClickOnTile(event) {
 
     switch (getField(coords).content) {
       case 'mine':
-        return endGame(coords)
+        return loseGame(coords)
       case 0:
         return uncoverNeighbours(coords)
       default:
@@ -220,7 +220,7 @@ function handleRightClickOnTile(event) {
 
     if (numberOfFlags === params.mines) {
       if (checkIfWon()) {
-        win()
+        winGame()
       }
     }
   }
@@ -250,13 +250,13 @@ function uncoverNeighbours({ x, y }) {
   }
 }
 
-function endGame({ x, y }) {
+function loseGame({ x, y }) {
   console.log('loser')
   showPlayfield()
   gameEnded = true
 }
 
-function win() {
+function winGame() {
   console.log('winner')
   showPlayfield()
   gameEnded = true
