@@ -3,6 +3,16 @@ let params = { x: 10, y: 10, mines: 10 }
 let gameEnded = false
 let numberOfFlagsPlaced = 0
 
+const DIRECTION = {
+  ADD: 0,
+  SUBTRACT: 1
+}
+
+const STATE = {
+  HIDDEN: 0,
+  VISIBLE: 1,
+  FLAGGED: 2
+}
 
 // shortcut for cases, when both x and y are from the same object
 function getField({ x, y }) {
@@ -12,7 +22,7 @@ function getField({ x, y }) {
 
 function updateNumberOfFlags(direction) {
   if (direction) {
-    numberOfFlagsPlaced = direction === 'add' ? numberOfFlagsPlaced +1 : numberOfFlagsPlaced - 1
+    numberOfFlagsPlaced = direction === DIRECTION.ADD ? numberOfFlagsPlaced +1 : numberOfFlagsPlaced - 1
   }
   document.getElementById('number-of-flags').textContent = params.mines - numberOfFlagsPlaced
 }
@@ -102,9 +112,12 @@ function placeMines() {
     let px = Math.floor(position / y);
     let py = position % y
 
-    if (playfield[px][py].content === 'mine') continue
+    let field = getField({ px, py })
+    field.state = STATE.HIDDEN
 
-    playfield[px][py].content = 'mine'
+    if (field.content === 'mine') continue
+
+    field.content = 'mine'
     mines--
   }
 }
@@ -148,7 +161,7 @@ function calculateNeighbours() {
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
-      playfield[i][j].state = 'hidden'
+      playfield[i][j].state = STATE.HIDDEN
       if (playfield[i][j].content === 'mine') continue
 
       let neighbours = getNeighboursCoords(i, j)
@@ -194,9 +207,9 @@ function handleLeftClickOnTile(event) {
     [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
     let field = getField(coords)
 
-    if (field.state === 'flagged') {
-      field.state = 'visible'
-      updateNumberOfFlags('subtract')
+    if (field.state === STATE.FLAGGED) {
+      field.state = STATE.VISIBLE
+      updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
 
     switch (field.content) {
@@ -216,7 +229,7 @@ function checkIfWon() {
   for (let i = 0; i < params.x; i++) {
     for (let j = 0; j < params.y; j++) {
       let el = playfield[i][j]
-      if (el.state === 'flagged' && el.content === 'mine') {
+      if (el.state === STATE.FLAGGED && el.content === 'mine') {
         correctlyMarkedMines++
       }
     }
@@ -237,15 +250,15 @@ function handleRightClickOnTile(event) {
     [coords.x, coords.y] = clicked.id.split('-').map(el => parseInt(el, 10))
 
     let field = getField(coords)
-    if (field.state === 'hidden') {
+    if (field.state === STATE.HIDDEN) {
       clicked.innerHTML = '&#x1F6A9;'
-      field.state = 'flagged'
-      updateNumberOfFlags('add')
+      field.state = STATE.FLAGGED
+      updateNumberOfFlags(DIRECTION.ADD)
     }
-    else if (field.state === 'flagged') {
+    else if (field.state === STATE.FLAGGED) {
       clicked.innerHTML = ''
-      field.state = 'hidden'
-      updateNumberOfFlags('subtract')
+      field.state = STATE.HIDDEN
+      updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
 
     if (numberOfFlagsPlaced === params.mines) {
@@ -262,7 +275,7 @@ function uncoverTile({ x, y }) {
   let value = playfield[x][y].content
   element.textContent = value
   element.classList.add(getColorClass(value) || null)
-  playfield[x][y].state = 'visible'
+  playfield[x][y].state = STATE.VISIBLE
 }
 
 
@@ -273,11 +286,11 @@ function uncoverNeighbours({ x, y }) {
     if (neighbour === null) continue
 
     let field = getField(neighbour);
-    if (field.state === 'hidden') {
+    if (field.state === STATE.HIDDEN) {
       if (field.content === 0) {
         uncoverNeighbours(neighbour)
       }
-      else if (field.content !== 'mine' && field.state !== 'flagged') {
+      else if (field.content !== 'mine' && field.state !== STATE.FLAGGED) {
         uncoverTile(neighbour)
       }
     }
