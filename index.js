@@ -1,13 +1,14 @@
 import Time from './Time.js'
+import Settings from './Settings.js'
 
 
 let playfield = []
-let params = { x: 10, y: 10, mines: 10 }
 let gameEnded = false
 let numberOfFlagsPlaced = 0
 
 
 let time = new Time()
+let settings = new Settings()
 
 
 const DIRECTION = {
@@ -40,7 +41,7 @@ function updateNumberOfFlags(direction) {
   if (direction) {
     numberOfFlagsPlaced = direction === DIRECTION.ADD ? numberOfFlagsPlaced +1 : numberOfFlagsPlaced - 1
   }
-  document.getElementById('number-of-flags').textContent = params.mines - numberOfFlagsPlaced
+  document.getElementById('number-of-flags').textContent = settings.mines - numberOfFlagsPlaced
 }
 
 
@@ -55,46 +56,9 @@ function startGame() {
 }
 
 
-function getSettings() {
-  settings = JSON.parse(localStorage.getItem('settings') || '""')
-  if (settings) {
-    params = settings
-  }
-}
-
-
-function saveSettings() {
-  params = getParameters()
-  localStorage.setItem('settings', JSON.stringify(params))
-  startGame()
-}
-
-
-function getParameters() {
-  let selected = document.querySelector('input[name="sizeSelector"]:checked').value
-
-  function get(name) {
-    return parseInt(document.querySelector(`input[name=${name}]`).value,10)
-  }
-
-  switch(selected) {
-    case 'beginner':
-      return { x: 9, y: 9, mines: 10 }
-    case 'advanced':
-      return { x: 16, y: 16, mines: 40 }
-    case 'expert':
-      return { x: 16, y: 30, mines: 99 }
-    case 'custom':
-      return { x: get('x-size'), y: get('y-size'), mines: get('no-of-mines')}
-    default:
-      return { x: 9, y: 9, mines: 10 }
-  }
-}
-
-
 function generatePlayfield() {  
-  let x = params.x
-  let y = params.y
+  let x = settings.x
+  let y = settings.y
   let playfieldElement = document.getElementById('playfield')
   const tiles = []
 
@@ -119,9 +83,9 @@ function generatePlayfield() {
 
 
 function placeMines() {
-  let x = params.x
-  let y = params.y
-  let mines = params.mines
+  let x = settings.x
+  let y = settings.y
+  let mines = settings.mines
   const size = x * y
   
   while (mines) {
@@ -140,8 +104,8 @@ function placeMines() {
 }
 
 function getNeighboursCoords(x, y, adjacentOnly =  false) {
-  let maxX = params.x
-  let maxY = params.y
+  let maxX = settings.x
+  let maxY = settings.y
   
   /*
   p = plus
@@ -173,8 +137,8 @@ function getNeighboursCoords(x, y, adjacentOnly =  false) {
 
 
 function calculateNeighbours() {
-  let x = params.x
-  let y = params.y
+  let x = settings.x
+  let y = settings.y
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
@@ -244,8 +208,8 @@ function handleLeftClickOnTile(event) {
 function checkIfWon() {
   let correctlyMarkedMines = 0
 
-  for (let i = 0; i < params.x; i++) {
-    for (let j = 0; j < params.y; j++) {
+  for (let i = 0; i < settings.x; i++) {
+    for (let j = 0; j < settings.y; j++) {
       let el = playfield[i][j]
       if (el.state === STATE.FLAGGED && el.content === 'mine') {
         correctlyMarkedMines++
@@ -253,7 +217,7 @@ function checkIfWon() {
     }
   }
 
-  return correctlyMarkedMines === params.mines
+  return correctlyMarkedMines === settings.mines
 }
 
 function handleRightClickOnTile(event) {
@@ -280,7 +244,7 @@ function handleRightClickOnTile(event) {
       updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
 
-    if (numberOfFlagsPlaced === params.mines) {
+    if (numberOfFlagsPlaced === settings.mines) {
       if (checkIfWon()) {
         winGame()
       }
@@ -339,8 +303,8 @@ function winGame() {
 
 
 function showPlayfield() {
-  let x = params.x
-  let y = params.y
+  let x = settings.x
+  let y = settings.y
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
@@ -378,9 +342,9 @@ function handleRestartButton() {
 
 
 (() => {
-  document.getElementById('confirm-parameters').addEventListener('click', saveSettings)
+  document.getElementById('confirm-parameters').addEventListener('click', () => { settings.saveSettings(); startGame() })
   document.getElementById('restart-button').addEventListener('click', handleRestartButton)
-  getSettings()
+  settings.getSettings()
   startGame()
 })()
 
