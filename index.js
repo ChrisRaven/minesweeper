@@ -294,12 +294,12 @@ function handleRightClickOnTile(event) {
 
     let field = getField(coords)
     if (field.state === STATE.HIDDEN) {
-      clicked.innerHTML = '&#x1F6A9;'
+      clicked.textContent = '\u{1F6A9}'
       field.state = STATE.FLAGGED
       updateNumberOfFlags(DIRECTION.ADD)
     }
     else if (field.state === STATE.FLAGGED) {
-      clicked.innerHTML = ''
+      clicked.textContent = ''
       field.state = STATE.HIDDEN
       updateNumberOfFlags(DIRECTION.SUBTRACT)
     }
@@ -368,7 +368,23 @@ function showPlayfield() {
 
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
-      let text = playfield[i][j].content === 'mine' ? '\u{1F4A3}' : playfield[i][j].content
+      let tile = playfield[i][j]
+      let text = tile.content
+
+      if (tile.content === 'mine' && tile.state === STATE.FLAGGED) {
+        text = '\u{1F6A9}'
+      }
+      if (tile.content === 'mine' && tile.state !== STATE.FLAGGED) {
+        text = '\u{1F4A3}'
+      }
+      else if (tile.content !== 'mine' && tile.state === STATE.FLAGGED) {
+        // text = '\u{1F4A3}' + 'x'
+        text = 'F'
+      }
+      else if (tile.content === 0) {
+        text = ''
+      }
+
       document.getElementById(i + '-' + j).textContent = text
     }
   }
@@ -397,9 +413,7 @@ function handleRestartButton() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: change showPlayfield() for when a user wins the game to not show bombs instead of flags
 // TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
 // TODO: add win condition, when last field is opened manually
 // TODO: uncover all 8 neighbours of an empty field, while checking only 4 adjacent ones
 // TODO: mark exploded mine with red background
-// TODO: fix showPlayfield() to show blank tiles instead of zeroes
