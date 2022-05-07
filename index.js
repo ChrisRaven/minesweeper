@@ -24,8 +24,8 @@ const ICON = {
 
 function updateNumberOfFlags(direction) {
   if (direction) {
-    numberOfFlagsPlaced = direction === DIRECTION.ADD ? numberOfFlagsPlaced +1 : numberOfFlagsPlaced - 1
-  }
+    numberOfFlagsPlaced = direction === DIRECTION.ADD ? numberOfFlagsPlaced + 1 : numberOfFlagsPlaced - 1
+  } // else effectively set '#number-of-flags' to settings.mines
   document.getElementById('number-of-flags').textContent = settings.mines - numberOfFlagsPlaced
 }
 
@@ -78,12 +78,10 @@ function handleRightClickOnTile(event) {
   const clicked = event.target
   if (clicked.classList.contains('tile')) {
     updateNumberOfFlags(playfield.flag(clicked))
+  }
 
-    if (numberOfFlagsPlaced === settings.mines) {
-      if (checkIfWon()) {
-        wonGame()
-      }
-    }
+  if (playfield.checkIfWon()) {
+    wonGame()
   }
 }
 
@@ -135,5 +133,3 @@ function addEvents() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: add win condition, when only the fields with mines are unopened (some might be flagged, some not)
-// TODO: add win condition, when last field is opened manually

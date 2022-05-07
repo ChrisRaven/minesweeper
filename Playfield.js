@@ -268,18 +268,21 @@ export default class Playfield {
 
 
   checkIfWon() {
-    let correctlyMarkedMines = 0
+    const size = settings.x * settings.y
+    let uncoveredOrFlaggedFields = 0
 
     for (let i = 0; i < settings.x; i++) {
       for (let j = 0; j < settings.y; j++) {
         let el = this.getField(i, j)
-        if (el.state === STATE.FLAGGED && el.content === 'mine') {
-          correctlyMarkedMines++
+
+        if (el.state === STATE.HIDDEN || el.state === STATE.FLAGGED) {
+          uncoveredOrFlaggedFields++
         }
       }
     }
 
-    return correctlyMarkedMines === settings.mines
+    const onlyFieldsWithMinesLeft = uncoveredOrFlaggedFields === settings.mines
+    return  onlyFieldsWithMinesLeft
   }
 
 }
