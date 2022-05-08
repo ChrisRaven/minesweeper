@@ -29,9 +29,27 @@ body {
   height: 50px;
   transform: translate(-50%);
   z-index: 2;
-  border: 1px solid black;
   display: flex;
   justify-content: space-between;
+  background-color: #3c2b2b;
+}
+
+#number-of-flags,
+#time {
+  font-family: 'Orbitron';
+  color: #ee0a20;
+  font-size: 32px;
+  padding: 0 20px;
+  align-self: center;
+  width: 100px;
+}
+
+#result-icon {
+  font-size: 40px;
+  align-self: center;
+  padding-bottom: 5px;
+  width: 50px;
+  height: 50px;
 }
 
 .field {

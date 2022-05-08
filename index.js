@@ -196,4 +196,5 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: migrate #confirm-settings-button to the Settings.js file
+// TODO: fix number of mines counter
+// TODO: put status and playfield in the same container and make the status stick to the field and resize with it
