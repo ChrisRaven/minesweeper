@@ -6,6 +6,8 @@ import Playfield, { STATE } from './Playfield.js'
 let gameEnded = false
 let firstClick = true
 let numberOfFlagsPlaced = 0
+let twoButtonsPressed = false
+let doublePressedTile = null
 
 
 export let settings = new Settings()
@@ -130,9 +132,59 @@ function handleRestartButton() {
   }
 }
 
+
+function handleMouseDown(event) {
+  if (!event.target.classList.contains('tile')) return
+
+  if (event.buttons === 3) {
+    twoButtonsPressed = true
+    let coords = event.target.id.split('-')
+    doublePressedTile = coords
+    playfield.highlightNeighbours(coords)
+  }
+}
+
+
+function handleMouseUp(event) {
+  if (twoButtonsPressed) {
+    playfield.unhighlightNeighbours(event.target.id.split('-'))
+  }
+  if (!event.target.classList.contains('tile')) return
+
+  if (twoButtonsPressed) {
+    twoButtonsPressed = false
+    doublePressedTile = null
+    playfield.uncoverNeighboursIfClear(event.target.id.split('-'))
+  }
+
+}
+
+function handleMouseMove(event) {
+  if (!twoButtonsPressed) return
+
+  if (!event.target.classList.contains('tile')) {
+    twoButtonsPressed = false
+    playfield.unhighlightNeighbours(doublePressedTile)
+    doublePressedTile = null
+    return
+  }
+
+  let coords = event.target.id.split('-')
+  if (coords[0] !== doublePressedTile[0] || coords[1] !== doublePressedTile[1] ) {
+    playfield.unhighlightNeighbours(doublePressedTile)
+    doublePressedTile = coords
+    playfield.highlightNeighbours(doublePressedTile)
+  }
+}
+
+
 function addEvents() {
+  playfield.DOMNode.addEventListener('mousedown', handleMouseDown.bind(event))
+  playfield.DOMNode.addEventListener('mouseup', handleMouseUp.bind(event))
   playfield.DOMNode.addEventListener('click', handleLeftClickOnTile.bind(event))
   playfield.DOMNode.addEventListener('contextmenu', handleRightClickOnTile.bind(event))
+  playfield.DOMNode.addEventListener('mousemove', handleMouseMove.bind(event))
+
 }
 
 (() => {
@@ -145,4 +197,3 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours

@@ -110,6 +110,8 @@ export default class Playfield {
   getNeighboursCoords(x, y, diagonals =  true) {
     let maxX = settings.x
     let maxY = settings.y
+    x = parseInt(x, 10)
+    y = parseInt(y, 10)
     
     /*
     p = plus
@@ -296,6 +298,51 @@ export default class Playfield {
     }
     
     return result
+  }
+
+
+  highlightNeighbours(coords) {
+    let x = coords[0]
+    let y = coords[1]
+    let neighbours = Object.values(this.getNeighboursCoords(x, y, true))
+    neighbours.forEach(n => {
+      if (!n) return
+      if (this.getField(n).state === STATE.VISIBLE) return
+
+      let el = document.getElementById(n.x + '-' + n.y)
+      el.classList.add('opened-tile')
+    })
+  }
+
+  unhighlightNeighbours(coords) {
+    let x = coords[0]
+    let y = coords[1]
+    let neighbours = Object.values(this.getNeighboursCoords(x, y, true))
+    neighbours.forEach(n => {
+      if (!n) return
+      if (this.getField(n).state === STATE.VISIBLE) return
+
+      let el = document.getElementById(n.x + '-' + n.y)
+      el.classList.remove('opened-tile')
+    })
+  }
+
+
+  uncoverNeighboursIfClear(coords) {
+    let x = coords[0]
+    let y = coords[1]
+
+    if (this.getField(x, y).state !== STATE.VISIBLE) return
+    
+    let neighbours = Object.values(this.getNeighboursCoords(x, y, true))
+
+    neighbours.forEach(n => {
+      if (n === null) return
+      let el = this.getField(n)
+      if (el.state !== STATE.FLAGGED) {
+        document.getElementById(n.x + '-' + n.y)?.click()
+      }
+    })
   }
 
 

@@ -12,10 +12,11 @@
   height: var(--size);
   background-color: lightgray;
   border: 1px solid black;
-  margin: 2px;
+  /* margin: 2px; */
   text-align: center;
   vertical-align: bottom;
   cursor: default;
+  user-select: none;
 }
 
 .opened-tile {
