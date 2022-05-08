@@ -13,6 +13,7 @@ export const STATE = {
 }
 
 export default class Playfield {
+
   constructor () {
     this.playfield = []
     this.DOMNode = document.getElementById('playfield')
@@ -56,13 +57,13 @@ export default class Playfield {
     return this.playfield[x][y]
   }
 
-  
-  placeMines() {
+
+  #generateMines() {
     let x = settings.x
     let y = settings.y
     let mines = settings.mines
     const size = x * y
-    
+
     while (mines) {
       let position = Math.floor(Math.random() * size)
       let px = Math.floor(position / y)
@@ -75,7 +76,34 @@ export default class Playfield {
 
       field.content = 'mine'
       mines--
+      
     }
+  }
+
+
+  #clear() {
+    for (let i = 0; i < settings.x; i++) {
+      for (let j = 0; j < settings.y; j++) {
+        this.playfield[i][j] = { content: null, state: null }
+      }
+    }
+  }
+
+
+  placeMines(clickCoords) {
+    return new Promise(resolve => {
+      let mouseX = parseInt(clickCoords[0], 10)
+      let mouseY = parseInt(clickCoords[1], 10)
+
+      this.#generateMines()
+      while (this.getField(mouseX, mouseY).content === 'mine') {
+        this.#clear()
+        this.#generateMines()
+      }
+
+      resolve('resolved')
+    })
+    
   }
 
 
@@ -113,31 +141,35 @@ export default class Playfield {
 
 
   calculateNeighbours() {
-    let x = settings.x
-    let y = settings.y
+    return new Promise(resolve => {
+      let x = settings.x
+      let y = settings.y
 
-    for (let i = 0; i < x; i++) {
-      for (let j = 0; j < y; j++) {
-        let field = this.getField(i, j)
+      for (let i = 0; i < x; i++) {
+        for (let j = 0; j < y; j++) {
+          let field = this.getField(i, j)
 
-        field.state = STATE.HIDDEN
-        if (field.content === 'mine') continue
+          field.state = STATE.HIDDEN
+          if (field.content === 'mine') continue
 
-        let neighbours = this.getNeighboursCoords(i, j)
-        let counter = 0
+          let neighbours = this.getNeighboursCoords(i, j)
+          let counter = 0
 
-        for (let coords of Object.values(neighbours)) {
-          if (coords === null) continue
+          for (let coords of Object.values(neighbours)) {
+            if (coords === null) continue
 
-          let el = this.getField(coords)
-          if (el.content === 'mine') {
-            counter++
+            let el = this.getField(coords)
+            if (el.content === 'mine') {
+              counter++
+            }
           }
-        }
 
-        field.content = counter
+          field.content = counter
+        }
       }
-    }
+
+      resolve('resolved');
+    })
   }
 
 

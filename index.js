@@ -4,6 +4,7 @@ import Playfield, { STATE } from './Playfield.js'
 
 
 let gameEnded = false
+let firstClick = true
 let numberOfFlagsPlaced = 0
 
 
@@ -32,22 +33,16 @@ function updateNumberOfFlags(direction) {
 
 function startGame() {
   gameEnded = false
+  firstClick = true
   numberOfFlagsPlaced = 0
   time.resetTimer()
   updateNumberOfFlags()
   playfield.generate()
-  playfield.placeMines()
-  playfield.calculateNeighbours()
   addEvents() // to reattach event after each clearing of the playfield
 }
 
 
-function handleLeftClickOnTile(event) {
-  if (gameEnded) return
-
-  time.startTimer()
-
-  const clicked = event.target
+function markTile(clicked) {
   if (clicked.classList.contains('tile')) {
 
     let status = playfield.checkField(clicked)
@@ -59,12 +54,30 @@ function handleLeftClickOnTile(event) {
     if (status === 'lost') {
       updateNumberOfFlags(DIRECTION.SUBTRACT)
       let coords = clicked.id.split('-').map(coord => parseInt(coord, 10))
-      lostGame({x: coords[0], y: coords[1]})
+      lostGame({ x: coords[0], y: coords[1] })
     }
 
     if (status === 'won') {
       wonGame()
     }
+  }
+}
+
+
+async function handleLeftClickOnTile(event) {
+  if (gameEnded) return
+
+  time.startTimer()
+  const clicked = event.target
+
+  if (firstClick) {
+    firstClick = false
+    await playfield.placeMines(event.target.id.split('-'))
+    await playfield.calculateNeighbours()
+    markTile(clicked)
+  }
+  else {
+    markTile(clicked)
   }
 }
 
@@ -131,6 +144,6 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: make custom fields disabled, when something else is selected in the settings
+// TODO: add limit for custom difficulty, so the number of mines couldn't be equal or larger than the size of the field
+// TODO: prevent from actions after clicking outside any of the tiles
