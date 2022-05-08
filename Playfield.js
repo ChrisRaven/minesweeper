@@ -34,7 +34,7 @@ export default class Playfield {
       tiles.push('<br />')
     }
 
-    // to remove previous event listeners
+    // to remove previous event listeners from tiles
     this.DOMNode.replaceWith(this.DOMNode.cloneNode(true))
     this.DOMNode = document.getElementById('playfield')
 

@@ -133,3 +133,4 @@ function addEvents() {
 // TODO: styling
 // TODO: first element should be always safe
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
+// TODO: make custom fields disabled, when something else is selected in the settings

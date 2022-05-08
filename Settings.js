@@ -3,13 +3,40 @@ export default class Settings {
     this.x = 10
     this.y = 10
     this.mines = 10
+
+    document.querySelectorAll('input[name="sizeSelector"]').forEach(el => {
+      el.addEventListener('change', event => {
+        if (event.target.value !== 'custom') {
+          this.#getByName('x-size').disabled = true
+          this.#getByName('y-size').disabled = true
+          this.#getByName('no-of-mines').disabled = true
+        }
+        else {
+          this.#getByName('x-size').disabled = false
+          this.#getByName('y-size').disabled = false
+          this.#getByName('no-of-mines').disabled = false
+        }
+      })
+    })
   }
+  
+  
+  #getByName(name) {
+    return document.querySelector(`input[name="${name}"]`)
+  }
+
+
+  #get(name) {
+    return parseInt(this.#getByName(name).value, 10)
+  }
+
 
   #update({ x, y, mines }) {
     this.x = x
     this.y = y
     this.mines = mines
   }
+
 
   getSettings() {
     settings = JSON.parse(localStorage.getItem('settings') || '""')
@@ -18,14 +45,12 @@ export default class Settings {
     }
   }
   
+
   saveSettings() {
     this.#getParameters()
     localStorage.setItem('settings', JSON.stringify({ x: this.x, y: this.y, mines: this.mines }))
   }
 
-  #get(name) {
-    return parseInt(document.querySelector(`input[name=${name}]`).value, 10)
-  }
   
   #getParameters() {
     let selected = document.querySelector('input[name="sizeSelector"]:checked').value
