@@ -62,6 +62,11 @@ export default class Settings {
 
   saveSettings() {
     let params = this.#getParameters()
+    
+    if (params.x * params.y <= params.mines) {
+      return alert('Too many mines')
+    }
+
     this.#update(params)
     localStorage.setItem('settings', JSON.stringify({
       x: params.x,

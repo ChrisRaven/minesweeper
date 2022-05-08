@@ -146,4 +146,3 @@ function addEvents() {
 
 // TODO: styling
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
-// TODO: add limit for custom difficulty, so the number of mines couldn't be equal or larger than the size of the field
