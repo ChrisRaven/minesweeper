@@ -38,38 +38,64 @@ export default class Settings {
   }
 
 
+  #updateControls(selected) {
+    const event = new MouseEvent('change', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    })
+
+    let radio = document.querySelector(`input[name="sizeSelector"][value="${selected}"]`)
+    radio.dispatchEvent(event)
+    radio.checked = true
+  }
+
+
   getSettings() {
     settings = JSON.parse(localStorage.getItem('settings') || '""')
     if (settings) {
       this.#update(settings)
+      this.#updateControls(settings.selected)
     }
   }
   
 
   saveSettings() {
-    this.#getParameters()
-    localStorage.setItem('settings', JSON.stringify({ x: this.x, y: this.y, mines: this.mines }))
+    let params = this.#getParameters()
+    this.#update(params)
+    localStorage.setItem('settings', JSON.stringify({
+      x: params.x,
+      y: params.y,
+      mines: params.mines,
+      selected: [params.selected]
+    }))
   }
 
   
   #getParameters() {
     let selected = document.querySelector('input[name="sizeSelector"]:checked').value
 
+    let result = {}
     switch(selected) {
       case 'beginner':
-        this.#update({ x: 9, y: 9, mines: 10 })
+        result = { x: 9, y: 9, mines: 10 }
         break
       case 'advanced':
-        this.#update({ x: 16, y: 16, mines: 40 })
+        result = { x: 16, y: 16, mines: 40 }
         break
       case 'expert':
-        this.#update({ x: 16, y: 30, mines: 99 })
+        result = { x: 16, y: 30, mines: 99 }
         break
       case 'custom':
-        this.#update({ x: this.#get('x-size'), y: this.#get('y-size'), mines: this.#get('no-of-mines')})
+        result = { x: this.#get('x-size'), y: this.#get('y-size'), mines: this.#get('no-of-mines')}
         break
       default:
-        this.#update({ x: 9, y: 9, mines: 10 })
+        result = { x: 9, y: 9, mines: 10 }
     }
+
+    result = Object.assign(result, { selected: selected })
+
+    return result
   }
+
 }
