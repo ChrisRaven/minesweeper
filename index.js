@@ -33,7 +33,7 @@ function updateNumberOfFlags(direction) {
 }
 
 
-function startGame() {
+export function startGame() {
   gameEnded = false
   firstClick = true
   numberOfFlagsPlaced = 0
@@ -188,7 +188,6 @@ function addEvents() {
 }
 
 (() => {
-  document.getElementById('confirm-settings').addEventListener('click', () => { settings.saveSettings(); startGame() })
   document.getElementById('restart-button').addEventListener('click', handleRestartButton)
   settings.getSettings()
   addEvents()
@@ -197,3 +196,4 @@ function addEvents() {
 
 
 // TODO: styling
+// TODO: migrate #confirm-settings-button to the Settings.js file

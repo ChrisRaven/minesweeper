@@ -1,8 +1,21 @@
+import { startGame, settings } from './index.js'
+
+document.getElementById('confirm-settings-button').addEventListener('click', () => {
+  settings.saveSettings()
+  startGame()
+  settings.hideSettings()
+})
+
+function setDisplay(value) {
+  document.getElementById('settings').style.display = value
+}
+
 export default class Settings {
   constructor () {
     this.x = 10
     this.y = 10
     this.mines = 10
+    this.dialogVisibility = false
 
     document.querySelectorAll('input[name="sizeSelector"]').forEach(el => {
       el.addEventListener('change', event => {
@@ -19,13 +32,30 @@ export default class Settings {
       })
     })
 
-    document.getElementById('show-settings').addEventListener('click', () => {
-      document.getElementById('settings').style.display = 'block'
+    document.getElementById('show-settings-button').addEventListener('click', (event) => {
+      if (this.dialogVisibility) {
+        this.hideSettings()
+      }
+      else {
+        this.showSettings()
+      }
     })
 
-    document.getElementById('close-settings').addEventListener('click', () => {
-      document.getElementById('settings').style.display = 'none'
+    document.getElementById('close-settings-button').addEventListener('click', () => {
+      this.hideSettings()
     })
+  }
+
+  showSettings() {
+    this.dialogVisibility = true
+    setDisplay('block')
+    document.getElementById('show-settings-button').textContent = 'Hide settings'
+  }
+
+  hideSettings() {
+    this.dialogVisibility = false
+    setDisplay('none')
+    document.getElementById('show-settings-button').textContent = 'Show settings'
   }
   
   
@@ -60,10 +90,10 @@ export default class Settings {
 
 
   getSettings() {
-    settings = JSON.parse(localStorage.getItem('settings') || '""')
-    if (settings) {
-      this.#update(settings)
-      this.#updateControls(settings.selected)
+    let storageSettings = JSON.parse(localStorage.getItem('settings') || '""')
+    if (storageSettings) {
+      this.#update(storageSettings)
+      this.#updateControls(storageSettings.selected)
     }
   }
   
