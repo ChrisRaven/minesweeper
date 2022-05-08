@@ -188,7 +188,7 @@ function addEvents() {
 }
 
 (() => {
-  document.getElementById('confirm-parameters').addEventListener('click', () => { settings.saveSettings(); startGame() })
+  document.getElementById('confirm-settings').addEventListener('click', () => { settings.saveSettings(); startGame() })
   document.getElementById('restart-button').addEventListener('click', handleRestartButton)
   settings.getSettings()
   addEvents()

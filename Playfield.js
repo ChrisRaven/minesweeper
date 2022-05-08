@@ -181,12 +181,14 @@ export default class Playfield {
 
     if (field.state === STATE.HIDDEN) {
       element.textContent = ICON.FLAG
+      element.classList.add('flag')
       field.state = STATE.FLAGGED
       return DIRECTION.ADD
     }
     
     if (field.state === STATE.FLAGGED) {
       element.textContent = ''
+      element.classList.remove('flag')
       field.state = STATE.HIDDEN
       return DIRECTION.SUBTRACT
     }
@@ -265,7 +267,13 @@ export default class Playfield {
           text = ''
         }
 
-        document.getElementById(i + '-' + j).textContent = text
+        const el = document.getElementById(i + '-' + j)
+        el.textContent = text
+        el.classList.add('opened-tile', this.getColorClass(text))
+        if (tile.state === STATE.FLAGGED || tile.content === 'mine') {
+          el.classList.add('mine')
+        }
+
       }
     }
   }

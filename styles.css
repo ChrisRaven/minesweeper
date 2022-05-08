@@ -2,29 +2,70 @@
   --size: 20px;
 }
 
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+#settings {
+  display: none;
+  /* display: block; */
+  position: absolute;
+  background-color: white;
+  width: 400px;
+  height: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
 .field {
   line-height: 0;
+}
+
+#playfield {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .tile {
   display: inline-block;
   width: var(--size);
   height: var(--size);
-  background-color: lightgray;
-  border: 1px solid black;
-  /* margin: 2px; */
+  background-color: #c0c0c0;
+  border: 2px solid black;
+  border-color: white #808080 #808080 white;
   text-align: center;
   vertical-align: bottom;
   cursor: default;
   user-select: none;
+  font-family: 'Ubuntu Mono';
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 20px;
 }
 
 .opened-tile {
-  background-color: #EEE;
+  background-color: #c0c0c0;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: none;
+  border-right: none;
+  padding: 1px 2px 2px 1px;
 }
 
 .exploded-tile {
   background-color: red;
+}
+
+.mine, .flag {
+  font-size: 16px;
+  line-height: inherit;
 }
 
 .one   { color: #0000FF; }

@@ -18,6 +18,14 @@ export default class Settings {
         }
       })
     })
+
+    document.getElementById('show-settings').addEventListener('click', () => {
+      document.getElementById('settings').style.display = 'block'
+    })
+
+    document.getElementById('close-settings').addEventListener('click', () => {
+      document.getElementById('settings').style.display = 'none'
+    })
   }
   
   
@@ -62,7 +70,7 @@ export default class Settings {
 
   saveSettings() {
     let params = this.#getParameters()
-    
+
     if (params.x * params.y <= params.mines) {
       return alert('Too many mines')
     }
