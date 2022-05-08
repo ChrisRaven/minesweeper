@@ -66,6 +66,7 @@ function markTile(clicked) {
 
 async function handleLeftClickOnTile(event) {
   if (gameEnded) return
+  if (!event.target.classList.contains('tile')) return
 
   time.startTimer()
   const clicked = event.target
@@ -146,4 +147,3 @@ function addEvents() {
 // TODO: styling
 // TODO: add chording (two buttons pressed at the same time) to open all unflagged and unopened neighbours
 // TODO: add limit for custom difficulty, so the number of mines couldn't be equal or larger than the size of the field
-// TODO: prevent from actions after clicking outside any of the tiles
