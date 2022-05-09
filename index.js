@@ -122,7 +122,7 @@ function wonGame() {
 
 function handleRestartButton() {
   if (!gameEnded) {
-    if (confirm('Do you want to restart the unfinishe game?')) {
+    if (confirm('Do you want to restart the unfinished game?')) {
       startGame()
     }
   }
@@ -196,5 +196,6 @@ function addEvents() {
 
 // TODO: styling
 // TODO: do something with big sizes (e.g. 100x100)
-// TODO: don't close settings, if the amount of mines is incorrect
 // TODO: fix face-icon after winning/loosing previous game
+// TODO: find emoji for incorrectly placed flags
+// TODO: show a slightly smiling emoji through entire game, maybe changing it, when a left button is pressed

@@ -7,6 +7,8 @@ body {
   width: 100vw;
   height: 100vh;
   margin: 0;
+  /* background-color: #a7b5d7; */
+  background-color: #aabad3;
 }
 
 #settings {
@@ -46,10 +48,6 @@ body {
   padding-bottom: 5px;
   width: 50px;
   height: 50px;
-}
-
-.field {
-  line-height: 0;
 }
 
 #playfield {
@@ -108,12 +106,14 @@ body {
   align-items: center;
   min-width: 400px;
   margin: 0 auto;
-  background-color: whitesmoke;
+  /* background-color: whitesmoke; */
+  background-color: #3e3f9b;
 }
 
 #show-settings-button,
 #restart-button {
-  background-color: #2c2cc2;
+  /* background-color: #2c2cc2; */
+  background-color: #6a7bdb;
   border: none;
   padding: 12px 20px;
   width: 180px;

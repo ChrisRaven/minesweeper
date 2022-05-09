@@ -1,7 +1,8 @@
 import { startGame, settings } from './index.js'
 
 document.getElementById('confirm-settings-button').addEventListener('click', () => {
-  settings.saveSettings()
+  if (!settings.saveSettings()) return
+
   startGame()
   settings.hideSettings()
 })
@@ -102,7 +103,8 @@ export default class Settings {
     let params = this.#getParameters()
 
     if (params.x * params.y <= params.mines) {
-      return alert('Too many mines')
+      alert('Too many mines')
+      return false
     }
 
     this.#update(params)
@@ -112,6 +114,8 @@ export default class Settings {
       mines: params.mines,
       selected: [params.selected]
     }))
+
+    return true
   }
 
   
