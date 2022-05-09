@@ -12,8 +12,6 @@
   </head>
   <body>
     <div id="root">
-      
-      <div id="status-bar"><span id="number-of-flags"></span><div id="result-icon"></div><span id="time"></span></div>
       <div id="settings">
         <input type="radio" name="sizeSelector" checked value="beginner" />Beginner
         <input type="radio" name="sizeSelector" value="advanced" />Advanced
@@ -28,10 +26,14 @@
         <button id="confirm-settings-button">OK</button>
         <button id="close-settings-button">Close</button>
       </div>
-      <div id="playfield"></div>
-      <div id="button-wrapper">
-        <button id="show-settings-button">Show settings</button>
-        <button id="restart-button">Restart</button>
+      <div id="main-container">
+        <div id="status-bar"><span id="number-of-flags"></span><div id="result-icon"></div><span id="time"></span></div>
+        <div id="playfield"></div>
+        <div id="button-wrapper">
+          <button id="show-settings-button">Show settings</button>
+          <button id="restart-button">Restart</button>
+        </div>
+      </div>
       </div>
     </div>
     <script type="module" src="index.js"></script>

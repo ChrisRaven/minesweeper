@@ -195,5 +195,6 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: put status and playfield in the same container and make the status stick to the field and resize with it
 // TODO: do something with big sizes (e.g. 100x100)
+// TODO: don't close settings, if the amount of mines is incorrect
+// TODO: fix face-icon after winning/loosing previous game

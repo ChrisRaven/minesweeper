@@ -23,15 +23,11 @@ body {
 }
 
 #status-bar {
-  position: absolute;
-  left: 50%;
-  width: 400px;
-  height: 50px;
-  transform: translate(-50%);
   z-index: 2;
   display: flex;
   justify-content: space-between;
   background-color: #3c2b2b;
+  min-width: 400px;
 }
 
 #number-of-flags,
@@ -57,10 +53,7 @@ body {
 }
 
 #playfield {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 .tile {
@@ -109,15 +102,13 @@ body {
 .eight { color: #7F7F7F; }
 
 #button-wrapper {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
   height: 100px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  min-width: 400px;
+  margin: 0 auto;
+  background-color: whitesmoke;
 }
 
 #show-settings-button,
@@ -129,4 +120,11 @@ body {
   color: white;
   font-size: 20px;
   border-radius: 4px;
+}
+
+#main-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
