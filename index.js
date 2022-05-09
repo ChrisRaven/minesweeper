@@ -195,7 +195,9 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: do something with big sizes (e.g. 100x100)
 // TODO: fix face-icon after winning/loosing previous game
 // TODO: find emoji for incorrectly placed flags
 // TODO: show a slightly smiling emoji through entire game, maybe changing it, when a left button is pressed
+// TODO: change input types to number for custom size
+// TODO: status bar isn't visible when the  field is larger than the view window
+// TODO: check limits of input[type="number"] via JS

@@ -25,7 +25,7 @@ body {
 }
 
 #status-bar {
-  z-index: 2;
+  /* z-index: 2; */
   display: flex;
   justify-content: space-between;
   background-color: #3c2b2b;
@@ -52,6 +52,7 @@ body {
 
 #playfield {
   text-align: center;
+  white-space: nowrap;
 }
 
 .tile {

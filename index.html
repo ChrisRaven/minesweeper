@@ -19,9 +19,9 @@
         <label>
           <input type="radio" name="sizeSelector" value="custom" />
           Custom:
-            X: <input type="text" name="x-size" value=10 />
-            Y: <input type="text" name="y-size" value=10 />
-            Mines: <input type="text" name="no-of-mines" value=10 />
+            X: <input type="number" min=1 max=50 name="x-size" value=10 />
+            Y: <input type="number" min=1 max=50 name="y-size" value=10 />
+            Mines: <input type="number" min=1 max =2499 name="no-of-mines" value=10 />
         </label>
         <button id="confirm-settings-button">OK</button>
         <button id="close-settings-button">Close</button>
