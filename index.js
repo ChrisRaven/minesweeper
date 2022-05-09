@@ -26,7 +26,7 @@ const ICON = {
 }
 
 function updateNumberOfFlags(direction) {
-  if (direction) {
+  if (direction !== undefined) {
     numberOfFlagsPlaced = direction === DIRECTION.ADD ? numberOfFlagsPlaced + 1 : numberOfFlagsPlaced - 1
   } // else effectively set '#number-of-flags' to settings.mines
   document.getElementById('number-of-flags').textContent = settings.mines - numberOfFlagsPlaced
@@ -54,7 +54,6 @@ function markTile(clicked) {
     }
 
     if (status === 'lost') {
-      updateNumberOfFlags(DIRECTION.SUBTRACT)
       let coords = clicked.id.split('-').map(coord => parseInt(coord, 10))
       lostGame({ x: coords[0], y: coords[1] })
     }
@@ -196,5 +195,5 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: fix number of mines counter
 // TODO: put status and playfield in the same container and make the status stick to the field and resize with it
+// TODO: do something with big sizes (e.g. 100x100)
