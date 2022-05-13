@@ -50,13 +50,11 @@ export default class Settings {
   showSettings() {
     this.dialogVisibility = true
     setDisplay('block')
-    document.getElementById('show-settings-button').textContent = 'Hide settings'
   }
 
   hideSettings() {
     this.dialogVisibility = false
     setDisplay('none')
-    document.getElementById('show-settings-button').textContent = 'Show settings'
   }
   
   
