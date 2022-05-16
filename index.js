@@ -29,7 +29,7 @@ const FACE = {
 
 
 function setFace(value) {
-  document.getElementById('result-icon').textContent = value
+  document.getElementById('face-icon').textContent = value
 }
 
 
@@ -215,6 +215,7 @@ function addEvents() {
   playfield.DOMNode.addEventListener('click', handleLeftClickOnTile.bind(event))
   playfield.DOMNode.addEventListener('contextmenu', handleRightClickOnTile.bind(event))
   playfield.DOMNode.addEventListener('mousemove', handleMouseMove.bind(event))
+  document.getElementById('face-icon').addEventListener('click', startGame)
 
 }
 
@@ -224,6 +225,3 @@ function addEvents() {
   addEvents()
   startGame()
 })()
-
-
-// TODO: clicking on the face should restart the game
