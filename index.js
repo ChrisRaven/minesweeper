@@ -50,6 +50,10 @@ function correctHeight() {
     container.style.top = 0
     container.style.transform = 'translate(-50%, 0)'
   }
+  else {
+    container.style.top = '50%'
+    container.style.transform = 'translate(-50%, -50%)'
+  }
 }
 
 
@@ -222,4 +226,4 @@ function addEvents() {
 })()
 
 
-// TODO: styling
+// TODO: clicking on the face should restart the game
