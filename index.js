@@ -20,10 +20,18 @@ export const DIRECTION = {
   SUBTRACT: 1
 }
 
-const ICON = {
-  WON_FACE: '😀',
-  LOST_FACE: '😞'
+const FACE = {
+  WON: '😀',
+  LOST: '😞',
+  NORMAL: '☺️',
+  DANGER: '😑'
 }
+
+
+function setFace(value) {
+  document.getElementById('result-icon').textContent = value
+}
+
 
 function updateNumberOfFlags(direction) {
   if (direction !== undefined) {
@@ -54,6 +62,7 @@ export function startGame() {
   playfield.generate()
   correctHeight()
   addEvents() // to reattach event after each clearing of the playfield
+  setFace(FACE.NORMAL)
 }
 
 
@@ -116,7 +125,7 @@ function handleRightClickOnTile(event) {
 
 function lostGame({ x, y }) {
   console.log('loser')
-  document.getElementById('result-icon').textContent = ICON.LOST_FACE
+  setFace(FACE.LOST)
   document.getElementById(x + '-' + y).classList.add('exploded-tile')
   playfield.uncoverAll()
   time.stopTimer()
@@ -125,8 +134,8 @@ function lostGame({ x, y }) {
 
 
 function wonGame() {
-  document.getElementById('result-icon').textContent = ICON.WON_FACE
   console.log('winner')
+  setFace(FACE.WON)
   playfield.uncoverAll()
   time.stopTimer()
   gameEnded = true
@@ -148,6 +157,10 @@ function handleRestartButton() {
 function handleMouseDown(event) {
   if (!event.target.classList.contains('tile')) return
 
+  if (event.buttons === 1 || event.buttons === 3) {
+    setFace(FACE.DANGER)
+  }
+
   if (event.buttons === 3) {
     twoButtonsPressed = true
     let coords = event.target.id.split('-')
@@ -158,6 +171,8 @@ function handleMouseDown(event) {
 
 
 function handleMouseUp(event) {
+  setFace(FACE.NORMAL)
+
   if (twoButtonsPressed) {
     playfield.unhighlightNeighbours(event.target.id.split('-'))
   }
@@ -208,5 +223,3 @@ function addEvents() {
 
 
 // TODO: styling
-// TODO: fix face-icon after winning/loosing previous game
-// TODO: show a slightly smiling emoji through entire game, maybe changing it, when a left button is pressed
