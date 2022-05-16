@@ -33,6 +33,18 @@ function updateNumberOfFlags(direction) {
 }
 
 
+// for cases, where height of the playfield is bigger than the height of the viewport
+function correctHeight() {
+  let container = document.getElementById('main-container')
+  let state = container.getBoundingClientRect()
+
+  if (state.top < 0) {
+    container.style.top = 0
+    container.style.transform = 'translate(-50%, 0)'
+  }
+}
+
+
 export function startGame() {
   gameEnded = false
   firstClick = true
@@ -40,6 +52,7 @@ export function startGame() {
   time.resetTimer()
   updateNumberOfFlags()
   playfield.generate()
+  correctHeight()
   addEvents() // to reattach event after each clearing of the playfield
 }
 
@@ -199,4 +212,3 @@ function addEvents() {
 // TODO: find emoji for incorrectly placed flags
 // TODO: show a slightly smiling emoji through entire game, maybe changing it, when a left button is pressed
 // TODO: change input types to number for custom size
-// TODO: status bar isn't visible when the  field is larger than the view window
