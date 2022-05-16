@@ -2,8 +2,9 @@ import { settings, DIRECTION } from './index.js'
 
 
 const ICON = {
-  FLAG: '\u{1F6A9}',
-  MINE: '\u{1F4A3}'
+  FLAG: '🚩',
+  MINE: '💣',
+  INCORRECT_FLAG: '❌'
 }
 
 export const STATE = {
@@ -219,7 +220,8 @@ export default class Playfield {
     
     let element = document.getElementById(x + '-' + y)
     element.textContent = value
-    element.classList.add(this.getColorClass(value) || null)
+    let color = this.getColorClass(value)
+    color && element.classList.add(color)
     element.classList.add('opened-tile')
   }
 
@@ -261,7 +263,7 @@ export default class Playfield {
           text = ICON.MINE
         }
         else if (tile.content !== 'mine' && tile.state === STATE.FLAGGED) {
-          text = 'F'
+          text = ICON.INCORRECT_FLAG
         }
         else if (tile.content === 0) {
           text = ''
@@ -269,7 +271,9 @@ export default class Playfield {
 
         const el = document.getElementById(i + '-' + j)
         el.textContent = text
-        el.classList.add('opened-tile', this.getColorClass(text))
+        el.classList.add('opened-tile')
+        let color = this.getColorClass(text)
+        color && el.classList.add(color)
         if (tile.state === STATE.FLAGGED || tile.content === 'mine') {
           el.classList.add('mine')
         }
@@ -348,7 +352,7 @@ export default class Playfield {
       if (n === null) return
       let el = this.getField(n)
       if (el.state !== STATE.FLAGGED) {
-        document.getElementById(n.x + '-' + n.y)?.click()
+        document.getElementById(n.x + '-' + n.y).click()
       }
     })
   }
