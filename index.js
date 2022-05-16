@@ -200,4 +200,3 @@ function addEvents() {
 // TODO: show a slightly smiling emoji through entire game, maybe changing it, when a left button is pressed
 // TODO: change input types to number for custom size
 // TODO: status bar isn't visible when the  field is larger than the view window
-// TODO: check limits of input[type="number"] via JS

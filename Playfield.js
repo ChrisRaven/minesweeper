@@ -25,12 +25,12 @@ export default class Playfield {
     let y = settings.y
     const tiles = []
 
-    this.playfield = Array(x).fill(null).map(() => Array(y))
+    this.playfield = Array(y).fill(null).map(() => Array(x))
 
-    for (let i = 0; i < x; i++) {
-      for (let j = 0; j < y; j++) {
+    for (let i = 0; i < y; i++) {
+      for (let j = 0; j < x; j++) {
         this.playfield[i][j] = { content: null, state: null }
-        tiles.push(`<div class="tile" id="${i}-${j}"> </div>`)
+        tiles.push(`<div class="tile" id="${j}-${i}"> </div>`)
       }
       tiles.push('<br />')
     }
@@ -54,7 +54,7 @@ export default class Playfield {
       x = arg1
       y = arg2
     }
-    return this.playfield[x][y]
+    return this.playfield[y][x]
   }
 
 
@@ -82,8 +82,8 @@ export default class Playfield {
 
 
   #clear() {
-    for (let i = 0; i < settings.x; i++) {
-      for (let j = 0; j < settings.y; j++) {
+    for (let i = 0; i < settings.y; i++) {
+      for (let j = 0; j < settings.x; j++) {
         this.playfield[i][j] = { content: null, state: null }
       }
     }
