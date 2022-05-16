@@ -6,25 +6,36 @@
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@700&display=swap" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="root">
       <div id="settings">
-        <input type="radio" name="sizeSelector" checked value="beginner" />Beginner
-        <input type="radio" name="sizeSelector" value="advanced" />Advanced
-        <input type="radio" name="sizeSelector" value="expert" />Expert
+        <div id="settings-left-column">
+        <label>
+          <input type="radio" name="sizeSelector" checked value="beginner" /> beginner
+        </label>
+        <label>
+          <input type="radio" name="sizeSelector" value="advanced" /> advanced
+        </label>
+        <label>
+          <input type="radio" name="sizeSelector" value="expert" /> expert
+        </label>
         <label>
           <input type="radio" name="sizeSelector" value="custom" />
-          Custom:
-            X: <input type="number" min=1 max=50 name="x-size" id="x-size" value=10 />
-            Y: <input type="number" min=1 max=50 name="y-size" id="y-size" value=10 />
-            Mines: <input type="number" min=1 max =2499 name="no-of-mines" id="no-of-mines" value=10 />
+          custom
         </label>
-        <button id="confirm-settings-button">OK</button>
-        <button id="close-settings-button">Close</button>
+        </div>
+        <div id="settings-right-column">
+          X:<input type="number" min=1 max=50 name="x-size" id="x-size" value=10 /><br>
+          Y:<input type="number" min=1 max=50 name="y-size" id="y-size" value=10 /><br>
+          Mines:<input type="number" min=1 max =2499 name="no-of-mines" id="no-of-mines" value=10 />
+        </div>
+        <div id="settings-button-wrapper">
+          <button id="confirm-settings-button">OK</button>
+          <button id="close-settings-button">Close</button>
+        </div>
       </div>
       <div id="main-container">
         <div id="status-bar"><span id="number-of-flags"></span><div id="result-icon"></div><span id="time"></span></div>

@@ -87,7 +87,7 @@ export default class Settings {
 
   showSettings() {
     this.dialogVisibility = true
-    setDisplay('block')
+    setDisplay('flex')
   }
 
 
@@ -173,7 +173,7 @@ export default class Settings {
         result = { x: 16, y: 16, mines: 40 }
         break
       case 'expert':
-        result = { x: 16, y: 30, mines: 99 }
+        result = { x: 30, y: 16, mines: 99 }
         break
       case 'custom':
         if (!this.#checkLimits(false)) {
